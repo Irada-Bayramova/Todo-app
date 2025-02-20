@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var drawerLayout: DrawerLayout
     lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
 
-    val taskList = mutableListOf<String>()
+    val taskList = mutableListOf<Task>()
     lateinit var taskAdapter: TaskAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity() {
 
         val recyclerView: RecyclerView = findViewById(R.id.recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(this)
+
 
         taskAdapter = TaskAdapter(taskList)
         recyclerView.adapter = taskAdapter
@@ -60,13 +61,13 @@ class MainActivity : AppCompatActivity() {
             .setMessage("Enter the task name:")
             .setView(editText)
             .setPositiveButton("Add") { _, _ ->
-                val task = editText.text.toString().trim()
-                if (task.isNotEmpty()) {
-                    taskList.add(task)
+                val taskText = editText.text.toString().trim()
+                if (taskText.isNotEmpty()) {
+                    taskList.add(Task(taskText))
 
                     taskAdapter.notifyItemInserted(taskList.size - 1)
 
-                    Toast.makeText(this, "Task Added: $task", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Task Added: $taskText", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(this, "Task cannot be empty!", Toast.LENGTH_SHORT).show()
                 }
@@ -78,3 +79,4 @@ class MainActivity : AppCompatActivity() {
     }
 
 }
+
