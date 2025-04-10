@@ -8,6 +8,8 @@ import android.widget.CheckBox
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import android.content.Context
+
 
 
 class TaskAdapter(private val taskList: MutableList<Task>) : RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
@@ -30,8 +32,13 @@ class TaskAdapter(private val taskList: MutableList<Task>) : RecyclerView.Adapte
         holder.checkBox.isChecked = task.isDone
 
 
+
         holder.checkBox.setOnCheckedChangeListener { _, isChecked ->
             task.isDone = isChecked
+
+            val dbHelper = TodoDatabaseHelper(holder.itemView.context)
+            dbHelper.updateTaskStatus(task)
+
             holder.taskTextView.paintFlags =
                 if (isChecked) holder.taskTextView.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                 else holder.taskTextView.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
@@ -39,10 +46,16 @@ class TaskAdapter(private val taskList: MutableList<Task>) : RecyclerView.Adapte
 
 
         holder.deleteButton.setOnClickListener {
+            val task = taskList[position]
+
+            val dbHelper = TodoDatabaseHelper(holder.itemView.context)
+            dbHelper.deleteTask(task)
+
             taskList.removeAt(position)
             notifyItemRemoved(position)
             notifyItemRangeChanged(position, taskList.size)
         }
+
     }
 
     override fun getItemCount(): Int {

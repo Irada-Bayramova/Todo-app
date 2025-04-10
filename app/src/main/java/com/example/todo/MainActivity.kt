@@ -24,6 +24,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val dbHelper = TodoDatabaseHelper(this)
+        val tasks = dbHelper.getAllTasks()
+
+        taskList.addAll(tasks)
+
 
         drawerLayout = findViewById(R.id.drawer_layout)
         actionBarDrawerToggle = ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close)
@@ -65,7 +70,11 @@ class MainActivity : AppCompatActivity() {
                 if (taskText.isNotEmpty()) {
                     taskList.add(Task(taskText))
 
+                    val dbHelper = TodoDatabaseHelper(this)
+                    dbHelper.insertTask(taskText)
+
                     taskAdapter.notifyItemInserted(taskList.size - 1)
+
 
                     Toast.makeText(this, "Task Added: $taskText", Toast.LENGTH_SHORT).show()
                 } else {
@@ -77,6 +86,9 @@ class MainActivity : AppCompatActivity() {
 
         dialog.show()
     }
+
+
+
 
 }
 
